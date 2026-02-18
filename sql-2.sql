@@ -1,7 +1,6 @@
 SELECT 
     COLLECTOR_CODE, OUTSTANDING_BALANCE, JUDGE_TYPE, Group_Name, AGE_OF_WRITE_OFF, AUTO_TYPE_NAME,
     CASE 
-        -- กรณี Motorcycle
         WHEN AUTO_TYPE_NAME = 'Motorcycle' THEN
             CASE 
                 WHEN AGE_OF_WRITE_OFF <= 1 THEN
@@ -9,7 +8,6 @@ SELECT
                 WHEN AGE_OF_WRITE_OFF > 1 AND AGE_OF_WRITE_OFF <= 3 THEN
                     CASE WHEN OUTSTANDING_BALANCE < 10000 THEN 2000 WHEN OUTSTANDING_BALANCE < 30000 THEN 2500 ELSE 3000 END
             END
-        -- กรณี Non Motorcycle
         WHEN AUTO_TYPE_NAME = 'Non Motorcycle' THEN
             CASE 
                 WHEN AGE_OF_WRITE_OFF <= 1 THEN
@@ -19,6 +17,21 @@ SELECT
             END
     END AS Incentive
 FROM (
-    -- ดึง Query จากข้อ 1 มาใส่ตรงนี้ และเพิ่ม REPO_STATUS = 'W'
-    -- (สมมติว่าใช้ชื่อ Common Table Expression หรือ Subquery)
+   SELECT 
+    w.AGREEMENT_NO, 
+    w.OUTSTANDING_BALANCE, 
+    j.JUDGE_TYPE,
+    CASE 
+        WHEN w.OUTSTANDING_BALANCE < 50000 THEN 'กลุ่มที่ 1'
+        WHEN w.OUTSTANDING_BALANCE >= 50000 AND (j.JUDGE_TYPE NOT IN (1, 2) OR j.JUDGE_TYPE IS NULL) THEN 'กลุ่มที่ 2'
+        WHEN w.OUTSTANDING_BALANCE >= 50000 AND j.JUDGE_TYPE IN (1, 2) THEN 'กลุ่มที่ 3'
+    END AS Group_Name,
+    w.AGE_OF_WRITE_OFF,
+    w.AUTO_TYPE_NAME
+FROM TB_DATA_WO w
+LEFT JOIN TB_DATA_JUDETYPE j ON w.AGREEMENT_NO = j.AGREEMENT_NO
+WHERE NOT EXISTS (
+    SELECT 1 FROM TB_CAR_CASE c 
+    WHERE c.AGREEMENT_NO = w.AGREEMENT_NO
+);
 ) Sub;

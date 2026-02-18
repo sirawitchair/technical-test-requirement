@@ -149,4 +149,5 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Users Profile API',
     'DESCRIPTION': 'API for managing users and user profiles',
     'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }

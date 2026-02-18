@@ -1,0 +1,24 @@
+SELECT 
+    COLLECTOR_CODE, OUTSTANDING_BALANCE, JUDGE_TYPE, Group_Name, AGE_OF_WRITE_OFF, AUTO_TYPE_NAME,
+    CASE 
+        -- กรณี Motorcycle
+        WHEN AUTO_TYPE_NAME = 'Motorcycle' THEN
+            CASE 
+                WHEN AGE_OF_WRITE_OFF <= 1 THEN
+                    CASE WHEN OUTSTANDING_BALANCE < 10000 THEN 1500 WHEN OUTSTANDING_BALANCE < 30000 THEN 2000 ELSE 2500 END
+                WHEN AGE_OF_WRITE_OFF > 1 AND AGE_OF_WRITE_OFF <= 3 THEN
+                    CASE WHEN OUTSTANDING_BALANCE < 10000 THEN 2000 WHEN OUTSTANDING_BALANCE < 30000 THEN 2500 ELSE 3000 END
+            END
+        -- กรณี Non Motorcycle
+        WHEN AUTO_TYPE_NAME = 'Non Motorcycle' THEN
+            CASE 
+                WHEN AGE_OF_WRITE_OFF <= 1 THEN
+                    CASE WHEN OUTSTANDING_BALANCE < 100000 THEN 2500 WHEN OUTSTANDING_BALANCE < 300000 THEN 3100 ELSE 3600 END
+                WHEN AGE_OF_WRITE_OFF > 1 AND AGE_OF_WRITE_OFF <= 3 THEN
+                    CASE WHEN OUTSTANDING_BALANCE < 100000 THEN 3000 WHEN OUTSTANDING_BALANCE < 300000 THEN 3600 ELSE 4100 END
+            END
+    END AS Incentive
+FROM (
+    -- ดึง Query จากข้อ 1 มาใส่ตรงนี้ และเพิ่ม REPO_STATUS = 'W'
+    -- (สมมติว่าใช้ชื่อ Common Table Expression หรือ Subquery)
+) Sub;

@@ -21,8 +21,9 @@ FROM (
             END
     END AS Incentive
 FROM (
-   SELECT 
-    w.AGREEMENT_NO, 
+   SELECT
+    w.AGREEMENT_NO,
+    w.COLLECTOR_CODE,
     w.OUTSTANDING_BALANCE, 
     j.JUDGE_TYPE,
     CASE 
@@ -37,7 +38,7 @@ LEFT JOIN TB_DATA_JUDETYPE j ON w.AGREEMENT_NO = j.AGREEMENT_NO
 WHERE NOT EXISTS (
     SELECT 1 FROM TB_CAR_CASE c 
     WHERE c.AGREEMENT_NO = w.AGREEMENT_NO
-);
-) Sub; )
+)
+) Sub )
 ) t
 WHERE rnk = 1;

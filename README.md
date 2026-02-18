@@ -1,8 +1,11 @@
 <!-- @format -->
 
-# Users Profile API
+# Technical Test Requirement Testing 
+## มีทั้งสองข้อใน project เดียว สามารถเทสได้ตามที่เขียนไว้เลย
 
-## How to Run
+## 1. Users Profile API
+
+### How to Run
 
 1. Copy environment file
 
@@ -16,14 +19,14 @@ cp .env.example .env
 docker-compose up
 ```
 
-## API Testing
+### API Testing
 
 ```bash
 # swagger
 localhost:8000/api/v1/docs/
 ```
 
-## SQL Testing
+## 2. SQL Testing
 
 ตารางและข้อมูลทดสอบจะถูกสร้างอัตโนมัติเมื่อ run Docker ครั้งแรก (จากไฟล์ `init-db/01_init_tables.sql`)
 

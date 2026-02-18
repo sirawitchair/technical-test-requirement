@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
-from .models import User, UserProfile
-from .serializers import UserSerializer, UserProfileSerializer
+from .models import User
+from .serializers import UserSerializer
 
 
 class CustomPagination(PageNumberPagination):
@@ -29,43 +29,12 @@ class UserViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = User.objects.all()
         search = self.request.query_params.get('search')
-        sortby = self.request.query_params.get('sortby', 'created_at')
+        sortby = self.request.query_params.get('sortby', 'date_joined')
         sorttype = self.request.query_params.get('sorttype', 'desc')
 
         if search:
             queryset = queryset.filter(
                 Q(username__icontains=search) | Q(email__icontains=search)
-            )
-
-        if sorttype.lower() == 'desc':
-            sortby = f'-{sortby}'
-        queryset = queryset.order_by(sortby)
-
-        return queryset
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(True, status=status.HTTP_201_CREATED)
-
-
-class UserProfileViewSet(ModelViewSet):
-    serializer_class = UserProfileSerializer
-    pagination_class = CustomPagination
-
-    def get_queryset(self):
-        queryset = UserProfile.objects.all()
-        search = self.request.query_params.get('search')
-        sortby = self.request.query_params.get('sortby', 'created_at')
-        sorttype = self.request.query_params.get('sorttype', 'desc')
-
-        if search:
-            queryset = queryset.filter(
-                Q(first_name_th__icontains=search) |
-                Q(last_name_th__icontains=search) |
-                Q(first_name_en__icontains=search) |
-                Q(last_name_en__icontains=search)
             )
 
         if sorttype.lower() == 'desc':
